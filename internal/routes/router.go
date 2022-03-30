@@ -22,6 +22,8 @@ func SetupRouter() *gin.Engine {
 	taskServer := handler.NewTaskServer(authService)
 	authServer := handler.NewAuthServer(authService)
 
+	router.Static("/public", "./public")
+
 	router.GET("/task/", taskServer.GetAllTasksHandler)
 	router.GET("/task/:id", taskServer.GetTaskHandler)
 	router.POST("/task/", taskServer.CreateTaskHandler)
