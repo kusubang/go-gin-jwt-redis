@@ -3,13 +3,13 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/kusubang/auth/internal/models"
 	"github.com/kusubang/auth/internal/service"
+	"github.com/spf13/viper"
 )
 
 var user = models.User{
@@ -81,13 +81,13 @@ func (s *AuthServer) RefreshHandler(c *gin.Context) {
 	refreshToken := mapToken["refresh_token"]
 
 	//verify the token
-	os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsdmfdsjf") //this should be in an env file
+	// os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsdmfdsjf") //this should be in an env file
 	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(os.Getenv("REFRESH_SECRET")), nil
+		return []byte(viper.GetString("REFRESH_SECRET")), nil
 	})
 	//if there is an error, the token must have expired
 	if err != nil {

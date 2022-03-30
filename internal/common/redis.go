@@ -1,15 +1,14 @@
 package common
 
 import (
-	"os"
-
 	"github.com/go-redis/redis/v7"
+	"github.com/spf13/viper"
 )
 
 var client *redis.Client
 
 func init() {
-	dsn := os.Getenv("REDIS_DSN")
+	dsn := viper.GetString("REDIS_DSN")
 	if len(dsn) == 0 {
 		dsn = "localhost:6379"
 	}
