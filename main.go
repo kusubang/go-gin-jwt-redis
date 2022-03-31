@@ -11,10 +11,13 @@ func main() {
 	log := logger.GetLogger()
 
 	log.SetReportCaller(true)
-	log.WithFields(logrus.Fields{
-		"user": "admin",
-	}).Info("Some interesting info")
 
+	mainLogger := log.WithFields(logrus.Fields{
+		"category":  "instance",
+		"component": "main",
+	})
+
+	mainLogger.Info("service started")
 	log.Warn("This is a warning")
 	log.Error("An error occured!")
 
