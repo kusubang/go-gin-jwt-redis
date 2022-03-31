@@ -17,11 +17,8 @@ func init() {
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
 	logger.SetOutput(os.Stderr)
-
 }
 
 func GetLogger() *logrus.Logger {
 	return logger
 }
-
-type Fields logrus.Fields
