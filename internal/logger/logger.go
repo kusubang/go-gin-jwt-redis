@@ -7,19 +7,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var log *logrus.Logger
+var logger *logrus.Logger
 
 func init() {
-	log = logrus.New()
-	log.SetFormatter(&nested.Formatter{
+	logger = logrus.New()
+	logger.SetFormatter(&nested.Formatter{
 		HideKeys:        true,
 		FieldsOrder:     []string{"component", "category"},
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
-	log.SetOutput(os.Stderr)
+	logger.SetOutput(os.Stderr)
 
 }
 
 func GetLogger() *logrus.Logger {
-	return log
+	return logger
 }
+
+type Fields logrus.Fields

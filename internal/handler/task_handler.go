@@ -8,16 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kusubang/auth/internal/service"
 	"github.com/kusubang/auth/internal/taskstore"
+	"github.com/sirupsen/logrus"
 )
 
 type taskServer struct {
 	store   *taskstore.TaskStore
 	service *service.AuthService
+	logger  *logrus.Entry
 }
 
-func NewTaskServer(authService *service.AuthService) *taskServer {
+func NewTaskServer(authService *service.AuthService, logger *logrus.Entry) *taskServer {
 	store := taskstore.New()
-	return &taskServer{store: store}
+	return &taskServer{store: store, logger: logger}
 }
 
 func (ts *taskServer) GetAllTasksHandler(c *gin.Context) {

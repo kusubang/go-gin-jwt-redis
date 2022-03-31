@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kusubang/auth/internal/models"
 	"github.com/kusubang/auth/internal/service"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -20,10 +21,12 @@ var user = models.User{
 
 type AuthServer struct {
 	service *service.AuthService
+	logger  *logrus.Entry
 }
 
-func NewAuthServer(authService *service.AuthService) *AuthServer {
-	return &AuthServer{authService}
+func NewAuthServer(authService *service.AuthService, logger *logrus.Entry) *AuthServer {
+
+	return &AuthServer{authService, logger}
 }
 
 type User models.User
@@ -40,12 +43,14 @@ func (s *AuthServer) LoginHandler(c *gin.Context) {
 	}
 
 	token, err := s.service.CreateToken(user.ID)
+	s.logger.Info("create token")
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
 	saveErr := s.service.CreateAuth(user.ID, token)
+	s.logger.Info("create auth")
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}

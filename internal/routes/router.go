@@ -5,22 +5,38 @@ import (
 	"github.com/go-redis/redis/v7"
 	"github.com/kusubang/auth/internal/common"
 	"github.com/kusubang/auth/internal/handler"
+	"github.com/kusubang/auth/internal/logger"
 	"github.com/kusubang/auth/internal/middleware"
 	"github.com/kusubang/auth/internal/service"
+	"github.com/sirupsen/logrus"
 )
 
 var authService *service.AuthService
 var client *redis.Client
 
+var authLogger *logrus.Entry
+var taskLogger *logrus.Entry
+
 func init() {
 	client = common.GetRedisClient()
 	authService = service.NewAuthService(client)
+
+	logger := logger.GetLogger()
+
+	authLogger = logger.WithFields(logrus.Fields{
+		"component": "handler",
+		"category":  "auth",
+	})
+	taskLogger = logger.WithFields(logrus.Fields{
+		"component": "handler",
+		"category":  "task",
+	})
 }
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	taskServer := handler.NewTaskServer(authService)
-	authServer := handler.NewAuthServer(authService)
+	authServer := handler.NewAuthServer(authService, authLogger)
+	taskServer := handler.NewTaskServer(authService, taskLogger)
 
 	router.Static("/public", "./public")
 
