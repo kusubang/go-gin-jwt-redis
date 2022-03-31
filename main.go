@@ -7,19 +7,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+var log *logrus.Logger
+
 func main() {
 
-	logger := logger.GetLogger()
+	log = logger.GetLogger()
 
 	// log.SetReportCaller(true)
-
-	logger.WithFields(logrus.Fields{
-		"category":  "instance",
-		"component": "main",
-	}).Info("service started")
-
-	logger.Warn("This is a warning")
-	logger.Error("An error occured!")
 
 	viper.SetConfigFile(".env")
 	viper.ReadInConfig()

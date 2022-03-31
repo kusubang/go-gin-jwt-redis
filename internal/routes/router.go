@@ -40,13 +40,13 @@ func SetupRouter() *gin.Engine {
 
 	router.Static("/public", "./public")
 
-	router.GET("/task/", taskServer.GetAllTasksHandler)
-	router.GET("/task/:id", taskServer.GetTaskHandler)
-	router.POST("/task/", taskServer.CreateTaskHandler)
-
 	router.POST("/login/", authServer.LoginHandler)
 	router.POST("/logout/", middleware.TokenAuthMiddleware(authService), authServer.LogoutHandler)
 	router.POST("/token/refresh", authServer.RefreshHandler)
+
+	router.GET("/task/", taskServer.GetAllTasksHandler)
+	router.GET("/task/:id", middleware.TokenAuthMiddleware(authService), taskServer.GetTaskHandler)
+	router.POST("/task/", taskServer.CreateTaskHandler)
 
 	return router
 }
